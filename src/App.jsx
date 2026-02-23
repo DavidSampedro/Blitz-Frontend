@@ -50,9 +50,10 @@ import Sidebar from "./components/Sidebar";
 import Dashboard from "./components/Dashboard";
 import Grupos from "./components/Grupos";
 import Instituciones from "./components/Instituciones";
+import MapaRealTime from "./components/MapaRealTime";
 
 // 2. Componentes temporales (los crearemos en sus propios archivos más adelante)
-const Mapa = () => <div className="p-10 text-2xl font-bold text-gray-700">🗺️ Módulo de Mapa Interactivo en construcción...</div>;
+//const Mapa = () => <div className="p-10 text-2xl font-bold text-gray-700">🗺️ Módulo de Mapa Interactivo en construcción...</div>;
 const Reportes = () => <div className="p-10 text-2xl font-bold text-gray-700">📄 Módulo de Reportes PDF en construcción...</div>;
 
 function App() {
@@ -70,7 +71,7 @@ function App() {
             <Route path="/" element={<Dashboard />} />
             <Route path="/grupos" element={<Grupos />} />
             <Route path="/grupos/:id" element={<Instituciones />} /> 
-            <Route path="/mapa" element={<Mapa />} />
+            <Route path="/mapa" element={<MapaRealTime />} />
             <Route path="/reportes" element={<Reportes />} />
           </Routes>
         </main>
