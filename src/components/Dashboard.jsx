@@ -20,13 +20,18 @@ export default function Dashboard() {
 
       try {
         const [resP, resG] = await Promise.all([
-          fetch(`${apiUrl}/deliveries/progress`, { headers }),
-          fetch(`${apiUrl}/deliveries/groups`, { headers })
+          fetch(`${apiUrl}/deliveries/progress`),
+          fetch(`${apiUrl}/deliveries/groups`)
         ]);
 
         if (resP.ok && resG.ok) {
           setProgress(await resP.json());
           setGroups(await resG.json());
+          
+          setProgress(dataP);
+          setGroups(dataG);
+        } else {
+          console.error("Respuesta de red no satisfactoria");
         }
       } catch (err) {
         console.error("Error cargando el dashboard:", err);
