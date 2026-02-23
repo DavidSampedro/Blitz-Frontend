@@ -15,8 +15,8 @@ export default function Dashboard() {
       //const token = localStorage.getItem("token"); // Traemos el token guardado en el login
       
 // PEGA ESTO (Temporalmente):
-    const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYyODdiODUyLTBjNmItNDM0Ny05OTgwLTU0YTFlY2U2YWMxNSIsImlhdCI6MTc3MTYzNTgxNy...";
-      const headers = { Authorization: `Bearer ${token}` };
+    //const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYyODdiODUyLTBjNmItNDM0Ny05OTgwLTU0YTFlY2U2YWMxNSIsImlhdCI6MTc3MTYzNTgxNy...";
+      //const headers = { Authorization: `Bearer ${token}` };
 
       try {
         const [resP, resG] = await Promise.all([
