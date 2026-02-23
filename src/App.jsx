@@ -58,15 +58,13 @@ const Reportes = () => <div className="p-10 text-2xl font-bold text-gray-700">ðŸ
 
 function App() {
   return (
-    <Router>
-      <div className="flex bg-gray-50 min-h-screen">
-        
-        {/* Barra Lateral Fija */}
-        <Sidebar />
+  <div className="flex h-screen w-full bg-gray-50 overflow-hidden">
+    {/* La Sidebar ahora ocupa su espacio real */}
+    <Sidebar /> 
 
-        {/* Contenido Principal (Margen de ml-64 equivale al ancho del Sidebar) */}
-        <main className="flex-1 ml-64">
-          <Routes>
+    {/* El contenido principal ocupa el resto del ancho */}
+    <main className="flex-1 h-full overflow-y-auto">
+      <Routes>
             {/* Rutas de navegaciÃ³n */}
             <Route path="/" element={<Dashboard />} />
             <Route path="/grupos" element={<Grupos />} />
@@ -75,9 +73,7 @@ function App() {
             <Route path="/reportes" element={<Reportes />} />
           </Routes>
         </main>
-
       </div>
-    </Router>
   );
 }
 
