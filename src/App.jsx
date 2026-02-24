@@ -63,7 +63,8 @@ function App() {
     <Sidebar /> 
 
     {/* El contenido principal ocupa el resto del ancho */}
-    <main className="flex-1 h-full overflow-y-auto">
+    <main className="flex-1 h-full overflow-y-auto overflow-x-auto">
+      <div className="min-w-full inline-block align-middle">
       <Routes>
             {/* Rutas de navegación */}
             <Route path="/" element={<Dashboard />} />
@@ -72,6 +73,7 @@ function App() {
             <Route path="/mapa" element={<MapaRealTime />} />
             <Route path="/reportes" element={<Reportes />} />
           </Routes>
+        </div>
         </main>
       </div>
   );

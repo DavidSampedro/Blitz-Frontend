@@ -14,11 +14,11 @@ export default function Sidebar() {
   ];
 
   return (
-    <div 
-      className={`h-screen bg-white border-r border-gray-200 flex flex-col transition-all duration-300 relative ${
-        isExpanded ? "w-64" : "w-20"
-      }`}
-    >
+        // En el div principal de Sidebar.jsx
+      <div className={`h-screen bg-white border-r border-gray-200 flex flex-col transition-all duration-300 ${
+          isExpanded ? "w-64" : "w-20"
+      } hidden md:flex`}> {/* Esto oculta la barra en móviles muy pequeños si prefieres usar un menú hamburguesa */}
+      
       {/* Botón Flotante para colapsar */}
       <button 
         onClick={() => setIsExpanded(!isExpanded)}
