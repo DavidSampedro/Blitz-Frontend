@@ -17,8 +17,8 @@ export default function Sidebar() {
         // En el div principal de Sidebar.jsx
       <div className={`h-screen bg-white border-r border-gray-200 flex flex-col transition-all duration-300 ${
           isExpanded ? "w-64" : "w-20"
-      } hidden md:flex`}> {/* Esto oculta la barra en móviles muy pequeños si prefieres usar un menú hamburguesa */}
-      
+      } flex-shrink-0`}> {/* flex-shrink-0" evita que se desaparezca o se aplaste*/}
+
       {/* Botón Flotante para colapsar */}
       <button 
         onClick={() => setIsExpanded(!isExpanded)}
