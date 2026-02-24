@@ -43,7 +43,7 @@ export default App
   )
 }
 export default App*/
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import {Routes, Route } from "react-router-dom";
 
 // 1. Importaciones de tus componentes reales
 import Sidebar from "./components/Sidebar";
