@@ -15,7 +15,7 @@ export default function Sidebar() {
 
   return (
         // En el div principal de Sidebar.jsx
-      <div className={`h-screen bg-white border-r border-gray-200 flex flex-col transition-all duration-300 ${
+      <div className={`h-screen bg-white border-r border-gray-200 flex flex-col transition-all duration-300 relative ${
           isExpanded ? "w-64" : "w-20"
       } flex-shrink-0`}> {/* flex-shrink-0" evita que se desaparezca o se aplaste*/}
 
@@ -57,7 +57,7 @@ export default function Sidebar() {
       <div className="p-4 border-t border-gray-100">
         <button className="flex items-center gap-4 px-4 py-3 w-full text-red-500 hover:bg-red-50 rounded-xl transition-all">
           <LogOut size={22} />
-          {isExpanded && <span className="font-bold">Cerrar Sesión</span>}
+          {isExpanded && <span className="font-bold">ECUADOR 2026</span>}
         </button>
       </div>
     </div>
