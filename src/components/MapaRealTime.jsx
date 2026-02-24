@@ -147,7 +147,7 @@ export default function MapaRealTime() {
   const [puntos, setPuntos] = useState([]);
 
   useEffect(() => {
-    fetch(`${apiUrl}/map/locations`)
+    fetch(`${apiUrl}/api/map/locations`)
       .then(res => res.json())
       .then(data => setPuntos(data))
       .catch(err => console.error("Error al cargar puntos:", err));
@@ -157,7 +157,7 @@ export default function MapaRealTime() {
     <div className="p-4 h-screen bg-gray-100 flex flex-col">
       <div className="bg-white p-6 rounded-2xl shadow-sm mb-4 flex justify-between items-center border border-gray-200">
         <div>
-          <h1 className="text-2xl font-black text-gray-800 tracking-tight">RADAR LOGÍSTICO BLITZ 📡</h1>
+          <h1 className="text-2xl font-black text-gray-800 tracking-tight">RADAR LOGÍSTICO BLITZ CUENCA📡</h1>
           <p className="text-gray-500 text-sm">Monitoreo de entregas en tiempo real</p>
         </div>
         <div className="flex gap-6">
@@ -173,7 +173,7 @@ export default function MapaRealTime() {
       </div>
 
       <div className="flex-1 rounded-3xl overflow-hidden shadow-2xl border-8 border-white">
-        <MapContainer center={[-1.45, -78.5]} zoom={7} className="h-full w-full">
+        <MapContainer center={[-2.90, -79.00]} zoom={10} className="h-full w-full">
           {/* Mapa base elegante estilo 'Voyager' */}
           <TileLayer url="https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png" />
           
