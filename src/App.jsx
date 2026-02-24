@@ -58,17 +58,19 @@ const Reportes = () => <div className="p-10 text-2xl font-bold text-gray-700">�
 
 function App() {
   return (
-  <div className="flex h-screen w-full bg-gray-50 overflow-hidden flex-nowrap">
-    {/* 1. SIDEBAR: Se mantiene fija a la izquierda pero dentro del flujo flex */}
+  // "flex-nowrap" obliga a que Sidebar y Main estén siempre uno al lado del otro
+    <div className="flex h-screen w-full bg-gray-50 overflow-x-auto flex-nowrap">
+    
+    {/* 1. SIDEBAR: SIDEBAR: Siempre presente y no se encoge */}
     <Sidebar /> 
 
     {/* 2. CONTENIDO PRINCIPAL: 
-          - flex-1: toma el resto del espacio.
-          - overflow-x-auto: permite arrastrar a la derecha en celular.
+          - min-w-[100vw]: garantiza que el contenido ocupe al menos toda la pantalla.
+          - md:min-w-0: en PC vuelve a la normalidad.
       */}
-    <main className="flex-1 h-full overflow-y-auto overflow-x-auto">
+    <main className="flex-1 h-full overflow-y-auto min-w-[100vw] md:min-w-0">
       {/* Este div interno asegura que el contenido no se "apriete" */}
-      <div className="p-4 min-w-[350px] md:min-w-full">
+      <div className="p-4"> {/* min-w-[350px] md:min-w-full*/}
       <Routes>
             {/* Rutas de navegación */}
             <Route path="/" element={<Dashboard />} />
