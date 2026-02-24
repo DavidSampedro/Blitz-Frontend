@@ -96,7 +96,7 @@ export default function Grupos() {
 
       {/* Formulario (Modal Simple) */}
       {mostrarFormulario && (
-        <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 mb-6">
+        <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 mb-6"> 
           <h2 className="text-xl font-bold mb-4">Registrar Nuevo Grupo</h2>
           <form onSubmit={handleSubmit} className="flex gap-4 items-end">
             <div className="flex-1">
@@ -127,8 +127,8 @@ export default function Grupos() {
       )}
 
       {/* Tabla de Datos */}
-      <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
-        <table className="w-full text-left border-collapse">
+      <div className="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-x-auto">
+        <table className="w-full min-w-[600px] text-left border-collapse">
           <thead className="bg-gray-50 border-b border-gray-100">
             <tr>
               <th className="p-4 font-semibold text-gray-600">Nombre</th>
