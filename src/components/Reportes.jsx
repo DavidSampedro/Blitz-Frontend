@@ -37,6 +37,38 @@ export default function Reportes() {
     cargarEstadisticas();
   }, []);
 
+
+// ... dentro del componente Reportes ...
+
+if (loading) return (
+  <div className="flex flex-col items-center justify-center min-h-screen bg-slate-50">
+    <div className="w-16 h-16 border-4 border-indigo-600 border-t-transparent rounded-full animate-spin mb-4"></div>
+    <p className="font-black text-indigo-900 animate-pulse uppercase tracking-widest text-sm">Cargando Datos...</p>
+  </div>
+);
+
+// --- ESTA ES LA PARTE CLAVE ---
+// Si hubo un error 404 o el servidor no respondió, data será null.
+// Debemos validar esto ANTES de intentar leer data.summary
+if (!data || !data.summary) {
+  return (
+    <div className="p-10 text-center">
+      <h2 className="text-xl font-bold text-red-500">Error: No se pudieron cargar los reportes</h2>
+      <p className="text-slate-500">Verifica que el servidor esté encendido y la ruta /api/reports/global exista.</p>
+      <button 
+        onClick={cargarEstadisticas} 
+        className="mt-4 bg-indigo-600 text-white px-4 py-2 rounded-lg"
+      >
+        Reintentar
+      </button>
+    </div>
+  );
+}
+
+// Si llegamos aquí, data existe y es seguro desestructurar
+const { summary, dailyTrend, groupPerformance } = data;
+
+
   // 2. FUNCIÓN DE EXPORTACIÓN A PDF (LÓGICA EJECUTIVA)
   const generarPDF = () => {
     if (!data) return;
