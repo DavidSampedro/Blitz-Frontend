@@ -231,7 +231,7 @@ const { summary, dailyTrend, groupPerformance } = data;
         <div className="flex items-center gap-4">
           <div className="p-3 bg-white/10 rounded-2xl"><Users size={24}/></div>
           <div>
-            <p className="text-indigo-200 text-[10px] font-black uppercase tracking-widest">Voluntarios Activos</p>
+            <p className="text-indigo-200 text-[10px] font-black uppercase tracking-widest">Gedeones Activos</p>
             <p className="text-2xl font-black">{data.summary.total_voluntarios}</p>
           </div>
         </div>
