@@ -51,10 +51,11 @@ import Dashboard from "./components/Dashboard";
 import Grupos from "./components/Grupos";
 import Instituciones from "./components/Instituciones";
 import MapaRealTime from "./components/MapaRealTime";
+import Reportes from "./components/Reportes";
 
 // 2. Componentes temporales (los crearemos en sus propios archivos más adelante)
 //const Mapa = () => <div className="p-10 text-2xl font-bold text-gray-700">🗺️ Módulo de Mapa Interactivo en construcción...</div>;
-const Reportes = () => <div className="p-10 text-2xl font-bold text-gray-700">📄 Módulo de Reportes PDF en construcción...</div>;
+//const Reportes = () => <div className="p-10 text-2xl font-bold text-gray-700">📄 Módulo de Reportes PDF en construcción...</div>;
 
 function App() {
   return (
