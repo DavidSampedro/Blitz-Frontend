@@ -236,7 +236,7 @@ const { summary, dailyTrend, groupPerformance } = data;
           </div>
         </div>
         <div className="text-center md:text-right">
-          <p className="text-indigo-200 text-xs font-bold mb-1 italic">"Impactando vidas paso a paso"</p>
+          <p className="text-indigo-200 text-xs font-bold mb-1 italic">"El Evangelio es nuestra MISION"</p>
           <p className="text-[10px] font-black text-white/50 uppercase tracking-tighter">Blitz System v2.0 © 2026</p>
         </div>
       </div>
