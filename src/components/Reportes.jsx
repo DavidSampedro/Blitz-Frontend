@@ -54,7 +54,7 @@ if (!data || !data.summary) {
   return (
     <div className="p-10 text-center">
       <h2 className="text-xl font-bold text-red-500">Error: No se pudieron cargar los reportes</h2>
-      <p className="text-slate-500">Verifica que el servidor esté encendido y la ruta /api/reports/global exista.</p>
+      <p className="text-slate-500">Verifica que el servidor esté encendido y la ruta {apiUrl}/reports/global exista.</p>
       <button 
         onClick={cargarEstadisticas} 
         className="mt-4 bg-indigo-600 text-white px-4 py-2 rounded-lg"
