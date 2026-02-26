@@ -4,10 +4,11 @@ import {
   AreaChart, Area, CartesianGrid, Cell 
 } from 'recharts';
 import { 
-  FileText, Download, Users, School, Target, 
-  Calendar, LayoutDashboard, ClipboardCheck, TrendingUp
+  Download, Users, School, Target, 
+  Calendar, ClipboardCheck, TrendingUp
 } from "lucide-react";
-import jsPDF from "jspdf";
+// 🚨 CORRECCIÓN CLAVE PARA EL PDF: Importar con llaves
+import { jsPDF } from "jspdf"; 
 import "jspdf-autotable";
 
 const apiUrl = import.meta.env.VITE_API_URL;
@@ -16,11 +17,9 @@ export default function Reportes() {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  // 1. CARGA DE DATOS DESDE EL BACKEND
   const cargarEstadisticas = async () => {
     setLoading(true);
     try {
-      // Usamos el endpoint global que definimos basándonos en tu controlador
       const res = await fetch(`${apiUrl}/reports/global`);
       if (res.ok) {
         const json = await res.json();
@@ -37,106 +36,116 @@ export default function Reportes() {
     cargarEstadisticas();
   }, []);
 
-
-// ... dentro del componente Reportes ...
-
-if (loading) return (
-  <div className="flex flex-col items-center justify-center min-h-screen bg-slate-50">
-    <div className="w-16 h-16 border-4 border-indigo-600 border-t-transparent rounded-full animate-spin mb-4"></div>
-    <p className="font-black text-indigo-900 animate-pulse uppercase tracking-widest text-sm">Cargando Datos...</p>
-  </div>
-);
-
-// --- ESTA ES LA PARTE CLAVE ---
-// Si hubo un error 404 o el servidor no respondió, data será null.
-// Debemos validar esto ANTES de intentar leer data.summary
-if (!data || !data.summary) {
-  return (
-    <div className="p-10 text-center">
-      <h2 className="text-xl font-bold text-red-500">Error: No se pudieron cargar los reportes</h2>
-      <p className="text-slate-500">Verifica que el servidor esté encendido y la ruta {apiUrl}/reports/global exista.</p>
-      <button 
-        onClick={cargarEstadisticas} 
-        className="mt-4 bg-indigo-600 text-white px-4 py-2 rounded-lg"
-      >
-        Reintentar
-      </button>
-    </div>
-  );
-}
-
-// Si llegamos aquí, data existe y es seguro desestructurar
-const { summary, dailyTrend, groupPerformance } = data;
-
-
-  // 2. FUNCIÓN DE EXPORTACIÓN A PDF (LÓGICA EJECUTIVA)
+  // 🚨 LÓGICA DE PDF CORREGIDA Y ROBUSTA
   const generarPDF = () => {
-    if (!data) return;
+    try {
+      if (!data || !data.summary) {
+        alert("Aún no hay datos cargados para exportar.");
+        return;
+      }
 
-    const doc = new jsPDF();
-    const pageWidth = doc.internal.pageSize.getWidth();
-    const fechaActual = new Date().toLocaleDateString();
+      const doc = new jsPDF();
+      const fechaActual = new Date().toLocaleDateString();
 
-    // Estilos de cabecera
-    doc.setFont("helvetica", "bold");
-    doc.setFontSize(22);
-    doc.setTextColor(79, 70, 229); 
-    doc.text("REPORTE EJECUTIVO BLITZ 2026", 20, 25);
-    
-    doc.setFontSize(10);
-    doc.setTextColor(100);
-    doc.setFont("helvetica", "normal");
-    doc.text(`Generado el: ${fechaActual}`, 20, 32);
+      // Variables base
+      const totalEntregado = Number(data.summary.total_entregado) || 0;
+      const metaGlobal = Number(data.summary.meta_estudiantes) || 40000;
+      const avanceGlobal = ((totalEntregado / metaGlobal) * 100).toFixed(1);
 
-    // Cuadro de Resumen (KPIs)
-    doc.setFillColor(245, 247, 250);
-    doc.roundedRect(20, 40, 170, 30, 3, 3, "F");
-    
-    doc.setFontSize(9);
-    doc.setTextColor(100);
-    doc.text("TOTAL ENTREGADO", 30, 50);
-    doc.text("META OBJETIVO", 80, 50);
-    doc.text("AVANCE %", 145, 50);
+      // Estilos de cabecera
+      doc.setFont("helvetica", "bold");
+      doc.setFontSize(22);
+      doc.setTextColor(79, 70, 229); 
+      doc.text("REPORTE EJECUTIVO BLITZ 2026", 20, 25);
+      
+      doc.setFontSize(10);
+      doc.setTextColor(100);
+      doc.setFont("helvetica", "normal");
+      doc.text(`Generado el: ${fechaActual}`, 20, 32);
 
-    doc.setFontSize(14);
-    doc.setTextColor(30);
-    doc.setFont("helvetica", "bold");
-    doc.text(data.summary.total_entregado.toLocaleString(), 30, 60);
-    doc.text(data.summary.meta_estudiantes.toLocaleString(), 80, 60);
-    doc.text(`${((data.summary.total_entregado / data.summary.meta_estudiantes) * 100).toFixed(1)}%`, 145, 60);
+      // Cuadro de Resumen (KPIs)
+      doc.setFillColor(245, 247, 250);
+      doc.roundedRect(20, 40, 170, 30, 3, 3, "F");
+      
+      doc.setFontSize(9);
+      doc.setTextColor(100);
+      doc.text("TOTAL ENTREGADO", 30, 50);
+      doc.text("META OBJETIVO", 80, 50);
+      doc.text("AVANCE %", 145, 50);
 
-    // Tabla de Grupos
-    const rows = data.groupPerformance.map(g => [
-      g.nombre, 
-      Number(g.total_entregado).toLocaleString(),
-      `${((g.total_entregado / data.summary.total_entregado) * 100).toFixed(1)}%`
-    ]);
+      doc.setFontSize(14);
+      doc.setTextColor(30);
+      doc.setFont("helvetica", "bold");
+      doc.text(totalEntregado.toLocaleString(), 30, 60);
+      doc.text(metaGlobal.toLocaleString(), 80, 60);
+      doc.text(`${avanceGlobal}%`, 145, 60);
 
-    doc.autoTable({
-      startY: 80,
-      head: [['Grupo / Equipo', 'Cantidad Entregada', '% de Contribución']],
-      body: rows,
-      theme: 'striped',
-      headStyles: { fillColor: [79, 70, 229] },
-      styles: { fontSize: 9 }
-    });
+      // Preparar datos para la tabla
+      const rows = data.groupPerformance.map(g => {
+        const aportado = Number(g.total_entregado) || 0;
+        // Evitar división por cero si totalEntregado es 0
+        const contribucion = totalEntregado > 0 ? ((aportado / totalEntregado) * 100).toFixed(1) : "0.0";
+        
+        return [
+          g.nombre, 
+          aportado.toLocaleString(),
+          `${contribucion}%`
+        ];
+      });
 
-    // Pie de página con firmas
-    const finalY = doc.lastAutoTable.finalY + 35;
-    doc.line(30, finalY, 80, finalY);
-    doc.text("Firma Coordinación", 40, finalY + 5);
-    doc.line(130, finalY, 180, finalY);
-    doc.text("Sello de Operaciones", 140, finalY + 5);
+      // Insertar Tabla
+      doc.autoTable({
+        startY: 80,
+        head: [['Grupo / Equipo', 'Cantidad Entregada', '% del Total General']],
+        body: rows,
+        theme: 'striped',
+        headStyles: { fillColor: [79, 70, 229] },
+        styles: { fontSize: 9 }
+      });
 
-    doc.save(`Reporte_Blitz_${fechaActual.replace(/\//g, '-')}.pdf`);
+      // Pie de página con firmas
+      const finalY = doc.lastAutoTable.finalY + 35;
+      doc.line(30, finalY, 80, finalY);
+      doc.text("Firma Coordinación", 40, finalY + 5);
+      doc.line(130, finalY, 180, finalY);
+      doc.text("Sello de Operaciones", 140, finalY + 5);
+
+      // Descargar archivo
+      doc.save(`Reporte_Blitz_${fechaActual.replace(/\//g, '-')}.pdf`);
+      
+    } catch (error) {
+      console.error("Error crítico al generar el PDF:", error);
+      alert("Hubo un error al generar el PDF. Revisa la consola (F12) para más detalles.");
+    }
   };
 
+  // --- ESTADOS DE CARGA Y ERROR ---
   if (loading) return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-slate-50">
       <div className="w-16 h-16 border-4 border-indigo-600 border-t-transparent rounded-full animate-spin mb-4"></div>
       <p className="font-black text-indigo-900 animate-pulse uppercase tracking-widest text-sm">Procesando Inteligencia de Datos...</p>
     </div>
   );
+
+  if (!data || !data.summary) {
+    return (
+      <div className="p-10 text-center flex flex-col items-center justify-center h-screen bg-slate-50">
+        <h2 className="text-2xl font-black text-red-500 mb-2">Error de conexión</h2>
+        <p className="text-slate-500 mb-6">No se pudieron cargar los datos del servidor. Verifica que el Backend esté activo.</p>
+        <button 
+          onClick={cargarEstadisticas} 
+          className="bg-indigo-600 text-white px-6 py-3 rounded-xl font-bold hover:bg-indigo-700 shadow-lg"
+        >
+          Reintentar Conexión
+        </button>
+      </div>
+    );
+  }
+
+  // Cálculos limpios para las tarjetas
+  const metaGlobal = Number(data.summary.meta_estudiantes) || 40000;
+  const totalEntregado = Number(data.summary.total_entregado) || 0;
+  const avancePorcentaje = metaGlobal > 0 ? ((totalEntregado / metaGlobal) * 100).toFixed(1) : 0;
 
   return (
     <div className="p-4 md:p-10 space-y-10 bg-[#F8FAFC] min-h-screen font-sans selection:bg-indigo-100">
@@ -158,9 +167,11 @@ const { summary, dailyTrend, groupPerformance } = data;
           >
             <Calendar size={20} className="text-slate-600" />
           </button>
+          
+          {/* BOTÓN DE PDF AHORA ENLAZADO Y PROTEGIDO */}
           <button 
             onClick={generarPDF}
-            className="flex items-center gap-3 bg-slate-900 text-white px-8 py-4 rounded-2xl font-black hover:bg-indigo-600 transition-all shadow-xl shadow-indigo-100 active:scale-95"
+            className="flex items-center gap-3 bg-slate-900 text-white px-8 py-4 rounded-2xl font-black hover:bg-indigo-600 transition-all shadow-xl shadow-indigo-100 active:scale-95 cursor-pointer"
           >
             <Download size={20} />
             <span>EXPORTAR PDF</span>
@@ -168,12 +179,12 @@ const { summary, dailyTrend, groupPerformance } = data;
         </div>
       </div>
 
-      {/* TARJETAS KPI (Basadas en tu SQL) */}
+      {/* TARJETAS KPI */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
         <KpiCard label="Escuelas" val={data.summary.total_instituciones} icon={School} color="text-blue-600" bg="bg-blue-50" />
-        <KpiCard label="Meta Global" val={data.summary.meta_estudiantes} icon={Target} color="text-indigo-600" bg="bg-indigo-50" />
-        <KpiCard label="Entregados" val={data.summary.total_entregado} icon={ClipboardCheck} color="text-emerald-600" bg="bg-emerald-50" />
-        <KpiCard label="Avance" val={`${((data.summary.total_entregado / data.summary.meta_estudiantes) * 100).toFixed(1)}%`} icon={TrendingUp} color="text-amber-600" bg="bg-amber-50" />
+        <KpiCard label="Meta Global" val={metaGlobal} icon={Target} color="text-indigo-600" bg="bg-indigo-50" />
+        <KpiCard label="Entregados" val={totalEntregado} icon={ClipboardCheck} color="text-emerald-600" bg="bg-emerald-50" />
+        <KpiCard label="Avance" val={`${avancePorcentaje}%`} icon={TrendingUp} color="text-amber-600" bg="bg-amber-50" />
       </div>
 
       <div className="grid grid-cols-1 xl:grid-cols-2 gap-8">
@@ -231,12 +242,12 @@ const { summary, dailyTrend, groupPerformance } = data;
         <div className="flex items-center gap-4">
           <div className="p-3 bg-white/10 rounded-2xl"><Users size={24}/></div>
           <div>
-            <p className="text-indigo-200 text-[10px] font-black uppercase tracking-widest">Gedeones Activos</p>
+            <p className="text-indigo-200 text-[10px] font-black uppercase tracking-widest">Voluntarios Activos</p>
             <p className="text-2xl font-black">{data.summary.total_voluntarios}</p>
           </div>
         </div>
         <div className="text-center md:text-right">
-          <p className="text-indigo-200 text-xs font-bold mb-1 italic">"El Evangelio es nuestra MISION"</p>
+          <p className="text-indigo-200 text-xs font-bold mb-1 italic">"El Evangelio es nuestra MISIÓN"</p>
           <p className="text-[10px] font-black text-white/50 uppercase tracking-tighter">Blitz System v2.0 © 2026</p>
         </div>
       </div>
@@ -244,8 +255,11 @@ const { summary, dailyTrend, groupPerformance } = data;
   );
 }
 
-// SUB-COMPONENTES PARA LIMPIEZA VISUAL
+// SUB-COMPONENTES 
 function KpiCard({ label, val, icon: Icon, color, bg }) {
+  // Aseguramos que siempre haya un valor para mostrar
+  const displayVal = val !== undefined && val !== null ? val : 0;
+  
   return (
     <div className="bg-white p-7 rounded-[2rem] border border-slate-100 shadow-sm hover:shadow-xl transition-all duration-300 group">
       <div className="flex items-center gap-5">
@@ -254,7 +268,9 @@ function KpiCard({ label, val, icon: Icon, color, bg }) {
         </div>
         <div>
           <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">{label}</p>
-          <p className="text-2xl font-black text-slate-800">{val.toLocaleString()}</p>
+          <p className="text-2xl font-black text-slate-800">
+            {typeof displayVal === 'number' ? displayVal.toLocaleString() : displayVal}
+          </p>
         </div>
       </div>
     </div>
